@@ -1,0 +1,57 @@
+{
+  "groups": [
+    {
+      "name": "github",
+      "type": "com.agentic.githubagent.config.GithubProperties",
+      "sourceType": "com.agentic.githubagent.config.GithubProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "github.api-base-url",
+      "type": "java.lang.String",
+      "sourceType": "com.agentic.githubagent.config.GithubProperties"
+    },
+    {
+      "name": "github.committer-email",
+      "type": "java.lang.String",
+      "sourceType": "com.agentic.githubagent.config.GithubProperties"
+    },
+    {
+      "name": "github.committer-name",
+      "type": "java.lang.String",
+      "sourceType": "com.agentic.githubagent.config.GithubProperties"
+    },
+    {
+      "name": "github.connect-timeout-ms",
+      "type": "java.lang.Long",
+      "sourceType": "com.agentic.githubagent.config.GithubProperties",
+      "defaultValue": 0
+    },
+    {
+      "name": "github.owner",
+      "type": "java.lang.String",
+      "sourceType": "com.agentic.githubagent.config.GithubProperties"
+    },
+    {
+      "name": "github.repository",
+      "type": "java.lang.String",
+      "sourceType": "com.agentic.githubagent.config.GithubProperties"
+    },
+    {
+      "name": "github.response-timeout-ms",
+      "type": "java.lang.Long",
+      "sourceType": "com.agentic.githubagent.config.GithubProperties",
+      "defaultValue": 0
+    },
+    {
+      "name": "github.token",
+      "type": "java.lang.String",
+      "sourceType": "com.agentic.githubagent.config.GithubProperties"
+    }
+  ],
+  "hints": [],
+  "ignored": {
+    "properties": []
+  }
+}

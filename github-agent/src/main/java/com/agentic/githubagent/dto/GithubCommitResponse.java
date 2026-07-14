@@ -1,0 +1,12 @@
+package com.agentic.githubagent.dto;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public record GithubCommitResponse(
+        String sha,
+        String url,
+        @JsonProperty("html_url") String htmlUrl
+) {
+}
