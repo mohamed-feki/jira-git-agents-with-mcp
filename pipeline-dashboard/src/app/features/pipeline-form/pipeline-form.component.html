@@ -1,0 +1,70 @@
+<form
+  [formGroup]="form"
+  (ngSubmit)="submit()"
+  class="grid grid-cols-1 gap-4 rounded-sm border border-rail bg-panel p-5 sm:grid-cols-3 sm:items-end sm:gap-3"
+>
+  <div class="flex flex-col gap-1.5">
+    <label for="ticketKey" class="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-dim">
+      Jira ticket
+    </label>
+    <input
+      id="ticketKey"
+      formControlName="ticketKey"
+      type="text"
+      placeholder="PROJ-25"
+      class="rounded-sm border border-rail bg-void px-3 py-2 font-mono text-sm text-ink placeholder:text-ink-faint focus:border-amber focus:outline-none"
+      [class.border-danger]="form.controls.ticketKey.invalid && form.controls.ticketKey.touched"
+    />
+    @if (form.controls.ticketKey.invalid && form.controls.ticketKey.touched) {
+      <span class="text-xs text-danger">Format like PROJ-25 is required.</span>
+    }
+  </div>
+
+  <div class="flex flex-col gap-1.5">
+    <label for="repository" class="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-dim">
+      GitHub repository
+    </label>
+    <input
+      id="repository"
+      formControlName="repository"
+      type="text"
+      placeholder="owner/repo"
+      class="rounded-sm border border-rail bg-void px-3 py-2 font-mono text-sm text-ink placeholder:text-ink-faint focus:border-amber focus:outline-none"
+      [class.border-danger]="form.controls.repository.invalid && form.controls.repository.touched"
+    />
+    @if (form.controls.repository.invalid && form.controls.repository.touched) {
+      <span class="text-xs text-danger">Format like owner/repo is required.</span>
+    }
+  </div>
+
+  <div class="flex flex-col gap-1.5">
+    <label for="branch" class="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-dim">
+      Branch
+    </label>
+    <input
+      id="branch"
+      formControlName="branch"
+      type="text"
+      placeholder="feature/PROJ-25"
+      class="rounded-sm border border-rail bg-void px-3 py-2 font-mono text-sm text-ink placeholder:text-ink-faint focus:border-amber focus:outline-none"
+      [class.border-danger]="form.controls.branch.invalid && form.controls.branch.touched"
+    />
+    @if (form.controls.branch.invalid && form.controls.branch.touched) {
+      <span class="text-xs text-danger">A branch name is required.</span>
+    }
+  </div>
+
+  <div class="sm:col-span-3">
+    <button
+      type="submit"
+      [disabled]="disabled"
+      class="group flex w-full items-center justify-center gap-2 rounded-sm bg-copper px-4 py-2.5 font-display text-sm font-semibold tracking-wide text-void transition-colors hover:bg-amber disabled:cursor-not-allowed disabled:bg-rail disabled:text-ink-faint sm:w-auto"
+    >
+      <span
+        class="inline-block h-0 w-0 border-y-[5px] border-l-[8px] border-y-transparent border-l-current"
+        aria-hidden="true"
+      ></span>
+      {{ disabled ? 'Pipeline running…' : 'Run pipeline' }}
+    </button>
+  </div>
+</form>

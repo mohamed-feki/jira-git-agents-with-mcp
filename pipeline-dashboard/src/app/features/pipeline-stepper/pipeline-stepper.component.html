@@ -1,0 +1,15 @@
+<div class="flex flex-col">
+  <app-jira-step [stage]="state.jira" (retry)="retryFrom.emit('jira')" />
+
+  <div class="ml-[35px] flex h-6 w-0.5 justify-center">
+    <div class="h-full w-0.5 rounded-full transition-colors" [ngClass]="connectorClass(state.jira.status)"></div>
+  </div>
+
+  <app-develop-step [stage]="state.develop" (retry)="retryFrom.emit('develop')" />
+
+  <div class="ml-[35px] flex h-6 w-0.5 justify-center">
+    <div class="h-full w-0.5 rounded-full transition-colors" [ngClass]="connectorClass(state.develop.status)"></div>
+  </div>
+
+  <app-github-step [stage]="state.github" (retry)="retryFrom.emit('github')" />
+</div>

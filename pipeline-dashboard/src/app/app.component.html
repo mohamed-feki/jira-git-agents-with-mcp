@@ -1,0 +1,24 @@
+<div class="flex min-h-screen flex-col">
+  <header class="border-b border-rail px-5 py-6 sm:px-8">
+    <span class="font-mono text-[11px] uppercase tracking-[0.2em] text-copper">Agent pipeline // run console</span>
+    <h1 class="mt-1 font-display text-2xl font-semibold text-ink sm:text-3xl">
+      Jira <span class="text-ink-faint">→</span> Code <span class="text-ink-faint">→</span> GitHub
+    </h1>
+    <p class="mt-1 max-w-2xl font-body text-sm text-ink-dim">
+      Drives three agents in sequence: read the ticket, generate the change with an LLM, then push the commit.
+      Each stage runs from your browser, straight to the local service.
+    </p>
+  </header>
+
+  <main class="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-5 py-8 sm:px-8">
+    <app-pipeline-form [disabled]="isRunning()" (runPipeline)="onRunPipeline($event)" />
+    <app-pipeline-stepper [state]="state()" (retryFrom)="onRetryFrom($event)" />
+  </main>
+
+  <app-pipeline-summary
+    [startedAt]="runStartedAt()"
+    [finishedAt]="runFinishedAt()"
+    [totalTokens]="totalTokens()"
+    [status]="status()"
+  />
+</div>

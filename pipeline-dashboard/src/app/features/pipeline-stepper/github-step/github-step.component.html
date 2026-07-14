@@ -1,0 +1,62 @@
+<div class="flex flex-col gap-3 rounded-sm border border-rail bg-panel p-4">
+  <button
+    type="button"
+    (click)="toggle()"
+    class="flex w-full items-center gap-3 text-left"
+    [class.cursor-default]="stage.status !== 'DONE'"
+  >
+    <app-stage-status-badge [status]="stage.status" [index]="3" />
+    <div class="flex flex-1 flex-col">
+      <span class="font-display text-sm font-semibold text-ink">Push to GitHub</span>
+      <span class="font-mono text-[11px] text-ink-dim">github-agent</span>
+    </div>
+    @if (stage.status === 'IN_PROGRESS') {
+      <app-elapsed-timer [since]="stage.startedAt" />
+    }
+    @if (stage.status === 'DONE') {
+      <span class="font-mono text-xs text-ink-faint">{{ expanded() ? '▾' : '▸' }}</span>
+    }
+  </button>
+
+  @if (stage.status === 'FAILED') {
+    <app-stage-error [message]="stage.errorMessage" (retry)="retry.emit()" />
+  }
+
+  @if (stage.status === 'DONE' && expanded() && stage.result) {
+    <dl class="grid grid-cols-2 gap-x-4 gap-y-2 border-t border-rail pt-3 text-sm sm:grid-cols-4">
+      <div>
+        <dt class="font-mono text-[11px] uppercase tracking-wide text-ink-dim">Commit</dt>
+        <dd class="font-mono text-signal">{{ shortSha(stage.result.commitSha) }}</dd>
+      </div>
+      <div>
+        <dt class="font-mono text-[11px] uppercase tracking-wide text-ink-dim">Branch</dt>
+        <dd class="font-mono text-ink">{{ stage.result.branch }}</dd>
+      </div>
+      <div>
+        <dt class="font-mono text-[11px] uppercase tracking-wide text-ink-dim">Files pushed</dt>
+        <dd class="text-ink">{{ stage.result.filesPushed }}</dd>
+      </div>
+      <div class="col-span-2 sm:col-span-2">
+        <dt class="font-mono text-[11px] uppercase tracking-wide text-ink-dim">Links</dt>
+        <dd class="flex flex-col gap-1">
+          <a
+            [href]="stage.result.commitUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-copper underline decoration-dotted underline-offset-2 hover:text-amber"
+          >
+            View commit ↗
+          </a>
+          <a
+            [href]="stage.result.repositoryUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-copper underline decoration-dotted underline-offset-2 hover:text-amber"
+          >
+            View repository ↗
+          </a>
+        </dd>
+      </div>
+    </dl>
+  }
+</div>

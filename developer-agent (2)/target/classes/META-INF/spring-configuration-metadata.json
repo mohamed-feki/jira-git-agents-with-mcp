@@ -1,0 +1,30 @@
+{
+  "groups": [
+    {
+      "name": "agent.llm",
+      "type": "com.agentic.developeragent.config.LlmProperties",
+      "sourceType": "com.agentic.developeragent.config.LlmProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "agent.llm.max-tokens",
+      "type": "java.lang.Integer",
+      "sourceType": "com.agentic.developeragent.config.LlmProperties"
+    },
+    {
+      "name": "agent.llm.provider",
+      "type": "java.lang.String",
+      "sourceType": "com.agentic.developeragent.config.LlmProperties"
+    },
+    {
+      "name": "agent.llm.temperature",
+      "type": "java.lang.Double",
+      "sourceType": "com.agentic.developeragent.config.LlmProperties"
+    }
+  ],
+  "hints": [],
+  "ignored": {
+    "properties": []
+  }
+}

@@ -1,0 +1,56 @@
+<div class="flex flex-col gap-3 rounded-sm border border-rail bg-panel p-4">
+  <button
+    type="button"
+    (click)="toggle()"
+    class="flex w-full items-center gap-3 text-left"
+    [class.cursor-default]="stage.status !== 'DONE'"
+  >
+    <app-stage-status-badge [status]="stage.status" [index]="1" />
+    <div class="flex flex-1 flex-col">
+      <span class="font-display text-sm font-semibold text-ink">Read Jira ticket</span>
+      <span class="font-mono text-[11px] text-ink-dim">jira-agent</span>
+    </div>
+    @if (stage.status === 'IN_PROGRESS') {
+      <app-elapsed-timer [since]="stage.startedAt" />
+    }
+    @if (stage.status === 'DONE') {
+      <span class="font-mono text-xs text-ink-faint">{{ expanded() ? '▾' : '▸' }}</span>
+    }
+  </button>
+
+  @if (stage.status === 'FAILED') {
+    <app-stage-error [message]="stage.errorMessage" (retry)="retry.emit()" />
+  }
+
+  @if (stage.status === 'DONE' && expanded() && stage.result) {
+    <dl class="grid grid-cols-2 gap-x-4 gap-y-2 border-t border-rail pt-3 text-sm sm:grid-cols-4">
+      <div>
+        <dt class="font-mono text-[11px] uppercase tracking-wide text-ink-dim">Summary</dt>
+        <dd class="col-span-full text-ink">{{ stage.result.summary }}</dd>
+      </div>
+      <div class="col-span-full h-0"></div>
+      <div>
+        <dt class="font-mono text-[11px] uppercase tracking-wide text-ink-dim">Priority</dt>
+        <dd class="text-ink">{{ stage.result.priority }}</dd>
+      </div>
+      <div>
+        <dt class="font-mono text-[11px] uppercase tracking-wide text-ink-dim">Assignee</dt>
+        <dd class="text-ink">{{ stage.result.assignee }}</dd>
+      </div>
+      <div>
+        <dt class="font-mono text-[11px] uppercase tracking-wide text-ink-dim">Story points</dt>
+        <dd class="text-ink">{{ stage.result.storyPoints ?? '—' }}</dd>
+      </div>
+      <div>
+        <dt class="font-mono text-[11px] uppercase tracking-wide text-ink-dim">Labels</dt>
+        <dd class="flex flex-wrap gap-1 text-ink">
+          @for (label of stage.result.labels; track label) {
+            <span class="rounded-sm border border-rail px-1.5 py-0.5 font-mono text-[11px] text-ink-dim">{{ label }}</span>
+          } @empty {
+            <span class="text-ink-faint">—</span>
+          }
+        </dd>
+      </div>
+    </dl>
+  }
+</div>

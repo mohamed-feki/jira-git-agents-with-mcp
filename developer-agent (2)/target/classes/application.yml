@@ -1,0 +1,98 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: developer-agent
+  profiles:
+    active: default
+
+  # All of the OpenAI autoconfiguration classes are excluded by default, so
+  # Spring Boot never tries to construct any OpenAI-backed bean (chat, audio
+  # speech, audio transcription, image, embedding, moderation) — each of
+  # which fails fast if OPENAI_API_KEY is unset. This lets the app boot
+  # cleanly with Ollama and no OpenAI key at all.
+  #
+  # To switch to OpenAI instead: activate the "openai" profile below, which
+  # re-enables OpenAiChatAutoConfiguration specifically and sets
+  # agent.llm.provider=openai. Set OPENAI_API_KEY when doing so.
+  autoconfigure:
+    exclude: >
+      org.springframework.ai.model.openai.autoconfigure.OpenAiChatAutoConfiguration,
+      org.springframework.ai.model.openai.autoconfigure.OpenAiEmbeddingAutoConfiguration,
+      org.springframework.ai.model.openai.autoconfigure.OpenAiAudioSpeechAutoConfiguration,
+      org.springframework.ai.model.openai.autoconfigure.OpenAiAudioTranscriptionAutoConfiguration,
+      org.springframework.ai.model.openai.autoconfigure.OpenAiImageAutoConfiguration,
+      org.springframework.ai.model.openai.autoconfigure.OpenAiModerationAutoConfiguration
+
+  ai:
+    ollama:
+      base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
+      chat:
+        options:
+          model: ${OLLAMA_MODEL:llama3.1}
+          temperature: ${LLM_TEMPERATURE:0.2}
+
+# Selects which Spring AI model backs the ChatClient: "openai" or "ollama"
+agent:
+  llm:
+    provider: ${LLM_PROVIDER:ollama}
+    temperature: ${LLM_TEMPERATURE:0.2}
+    max-tokens: ${LLM_MAX_TOKENS:4000}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when-authorized
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    root: INFO
+    com.agentic.developeragent: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+app:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:4200}
+
+---
+# Activate with --spring.profiles.active=ollama (already the default provider above)
+spring:
+  config:
+    activate:
+      on-profile: ollama
+agent:
+  llm:
+    provider: ollama
+
+---
+# Activate with --spring.profiles.active=openai to switch back to OpenAI.
+# This profile re-enables the OpenAI autoconfiguration that is excluded by
+# default above, so OpenAiChatModel can be constructed again.
+spring:
+  config:
+    activate:
+      on-profile: openai
+  autoconfigure:
+    exclude:
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:}
+      chat:
+        options:
+          model: ${OPENAI_MODEL:gpt-4o}
+          temperature: ${LLM_TEMPERATURE:0.2}
+agent:
+  llm:
+    provider: openai

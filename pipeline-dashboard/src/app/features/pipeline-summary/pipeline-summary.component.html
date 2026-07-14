@@ -1,0 +1,24 @@
+<div
+  class="sticky bottom-0 flex flex-wrap items-center justify-between gap-4 border-t border-rail bg-panel/95 px-5 py-3 backdrop-blur"
+>
+  <div class="flex items-center gap-2">
+    <span class="h-2 w-2 rounded-full" [ngClass]="{
+      'bg-amber animate-pulse': status === 'Running',
+      'bg-signal': status === 'Completed',
+      'bg-danger': status === 'Failed',
+      'bg-ink-faint': status === 'Not started'
+    }"></span>
+    <span class="font-display text-sm font-semibold" [ngClass]="statusClass">{{ status }}</span>
+  </div>
+
+  <div class="flex flex-wrap items-center gap-6">
+    <div class="flex flex-col items-end">
+      <span class="font-mono text-[10px] uppercase tracking-wide text-ink-dim">Elapsed</span>
+      <span class="font-mono text-sm text-ink">{{ elapsedDisplay }}</span>
+    </div>
+    <div class="flex flex-col items-end">
+      <span class="font-mono text-[10px] uppercase tracking-wide text-ink-dim">Tokens used</span>
+      <span class="font-mono text-sm text-ink">{{ totalTokens ?? '—' }}</span>
+    </div>
+  </div>
+</div>

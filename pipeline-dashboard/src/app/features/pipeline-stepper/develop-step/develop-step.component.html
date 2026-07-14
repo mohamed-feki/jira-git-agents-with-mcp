@@ -1,0 +1,72 @@
+<div class="flex flex-col gap-3 rounded-sm border border-rail bg-panel p-4">
+  <button
+    type="button"
+    (click)="toggle()"
+    class="flex w-full items-center gap-3 text-left"
+    [class.cursor-default]="stage.status !== 'DONE'"
+  >
+    <app-stage-status-badge [status]="stage.status" [index]="2" />
+    <div class="flex flex-1 flex-col">
+      <span class="font-display text-sm font-semibold text-ink">Generate code</span>
+      <span class="font-mono text-[11px] text-ink-dim">developer-agent · LLM</span>
+    </div>
+    @if (stage.status === 'IN_PROGRESS') {
+      <app-elapsed-timer [since]="stage.startedAt" />
+    }
+    @if (stage.status === 'DONE') {
+      <span class="font-mono text-xs text-ink-faint">{{ expanded() ? '▾' : '▸' }}</span>
+    }
+  </button>
+
+  @if (stage.status === 'IN_PROGRESS') {
+    <p class="border-t border-rail pt-3 font-mono text-[11px] text-ink-dim">
+      Generation can take a few seconds to over a minute depending on the model.
+    </p>
+  }
+
+  @if (stage.status === 'FAILED') {
+    <app-stage-error [message]="stage.errorMessage" (retry)="retry.emit()" />
+  }
+
+  @if (stage.status === 'DONE' && stage.result) {
+    <div class="grid grid-cols-3 gap-2 border-t border-rail pt-3">
+      <div class="rounded-sm border border-rail bg-void p-2 text-center">
+        <div class="font-mono text-lg text-ink">{{ stage.result.tokenUsage.promptTokens ?? '—' }}</div>
+        <div class="font-mono text-[10px] uppercase tracking-wide text-ink-dim">Prompt tokens</div>
+      </div>
+      <div class="rounded-sm border border-rail bg-void p-2 text-center">
+        <div class="font-mono text-lg text-ink">{{ stage.result.tokenUsage.completionTokens ?? '—' }}</div>
+        <div class="font-mono text-[10px] uppercase tracking-wide text-ink-dim">Completion tokens</div>
+      </div>
+      <div class="rounded-sm border border-amber/40 bg-amber/10 p-2 text-center">
+        <div class="font-mono text-lg text-amber">{{ stage.result.tokenUsage.totalTokens ?? '—' }}</div>
+        <div class="font-mono text-[10px] uppercase tracking-wide text-ink-dim">Total tokens</div>
+      </div>
+    </div>
+    @if (stage.result.tokenUsage.promptTokens === null && stage.result.tokenUsage.completionTokens === null && stage.result.tokenUsage.totalTokens === null) {
+      <p class="font-mono text-[11px] text-ink-faint">Usage not reported by this model.</p>
+    }
+
+    @if (expanded()) {
+      <div class="flex flex-col gap-1">
+        <span class="font-mono text-[11px] uppercase tracking-wide text-ink-dim">
+          {{ stage.result.files.length }} file(s) generated
+        </span>
+        @for (file of stage.result.files; track file.path) {
+          <button
+            type="button"
+            (click)="selectFile(file)"
+            class="flex items-center justify-between rounded-sm border border-transparent px-2 py-1.5 text-left font-mono text-xs text-ink hover:border-rail hover:bg-void"
+            [class.border-copper]="selectedFile() === file"
+          >
+            <span>{{ file.path }}</span>
+            <span class="text-ink-faint">{{ selectedFile() === file ? '▾' : '▸' }}</span>
+          </button>
+          @if (selectedFile() === file) {
+            <pre class="max-h-64 overflow-auto rounded-sm border border-rail bg-void p-3 font-mono text-[11px] leading-relaxed text-ink-dim">{{ file.content }}</pre>
+          }
+        }
+      </div>
+    }
+  }
+</div>
