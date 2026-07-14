@@ -1,0 +1,24 @@
+spring:
+  ai:
+    ollama:
+      base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
+      chat:
+        options:
+          model: ${OLLAMA_MODEL:llama3.1}
+
+    mcp:
+      client:
+        servers:
+          jira:
+            transport: STDIO
+            command: npx
+            args:
+              - -y
+              - mcp-atlassian
+            env:
+              JIRA_URL: ${JIRA_URL:https://mohamedfeki.atlassian.net}              # e.g. https://yourorg.atlassian.net
+              JIRA_USERNAME: ${JIRA_USERNAME:medfeki04@gmail.com}    # your Atlassian account email
+              JIRA_API_TOKEN: ${JIRA_API_TOKEN:}  # API token from id.atlassian.com
+
+server:
+  port: 8081
