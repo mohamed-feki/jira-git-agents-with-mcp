@@ -10,6 +10,23 @@ public class JiraAgentService {
     private final ChatClient chatClient;
 
     public JiraAgentService(ChatClient.Builder builder, ToolCallbackProvider tools) {
+
+        if (tools == null) {
+            System.out.println("❌ ToolCallbackProvider is NULL");
+        } else {
+            var callbacks = tools.getToolCallbacks();
+
+            if (callbacks.length == 0) {
+                System.out.println("⚠️ No MCP tools found!");
+            } else {
+                System.out.println("✅ MCP tools found: {}"+ callbacks.length);
+
+                for (var callback : callbacks) {
+                    System.out.println("🔧 Tool: {}"+ callback.getToolDefinition().name());
+                }
+            }
+        }
+
         this.chatClient = builder
                 .defaultToolCallbacks(tools)
                 .defaultSystem("""
@@ -18,7 +35,8 @@ public class JiraAgentService {
                         the ticket details and provide a clear, structured summary.
                         """)
                 .build();
-    } // <-- Properly closing the constructor here
+    }
+
 
     /**
      * Fetches and summarizes a Jira ticket by key (e.g. "PROJ-123").
@@ -40,4 +58,4 @@ public class JiraAgentService {
                 .call()
                 .content();
     }
-} // <-- Properly closing the class here
+} // <-- Properly cl osing the class here

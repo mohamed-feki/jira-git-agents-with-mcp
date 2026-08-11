@@ -14,22 +14,23 @@ public class JiraController {
         this.agentService = agentService;
     }
 
-    /**
-     * GET /tickets/{key}
-     * Fetches and summarizes a single Jira ticket.
-     * Example: GET /tickets/PROJ-123
-     */
+    @GetMapping("/test")
+    public ResponseEntity<String> test() {
+        return ResponseEntity.ok("Jira Controller is working!");
+    }
+
     @GetMapping("/{key}")
     public ResponseEntity<String> getTicket(@PathVariable String key) {
+
+        System.out.println(">>> Request received for ticket: " + key);
+
         String result = agentService.readTicket(key);
+
+        System.out.println(">>> AI result: " + result);
+
         return ResponseEntity.ok(result);
     }
 
-    /**
-     * POST /tickets/query
-     * Free-form natural language query against Jira.
-     * Body: { "message": "List all open bugs assigned to me" }
-     */
     @PostMapping("/query")
     public ResponseEntity<String> query(@RequestBody QueryRequest request) {
         String result = agentService.query(request.message());

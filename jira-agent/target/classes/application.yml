@@ -4,10 +4,12 @@ spring:
       base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
       chat:
         options:
-          model: ${OLLAMA_MODEL:llama3.1}
+          model: gemma4:31b-cloud
 
     mcp:
       client:
+        enabled: true
+        initialized-clients: sync    # ensure clients are eagerly initialized
         servers:
           jira:
             transport: STDIO
