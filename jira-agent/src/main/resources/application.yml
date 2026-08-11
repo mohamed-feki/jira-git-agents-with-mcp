@@ -2,7 +2,7 @@ spring:
   ai:
     openai:
       base-url: https://ollama.com
-      api-key: .....
+      api-key: ${OLLAMA_API_TOKEN:}
       chat:
         options:
           model: gemma4:31b-cloud
@@ -14,9 +14,8 @@ spring:
         servers:
           jira:
             transport: STDIO
-            command: npx
+            command: uvx
             args:
-              - -y
               - mcp-atlassian
             env:
               JIRA_URL: ${JIRA_URL:https://mohamedfeki.atlassian.net}              # e.g. https://yourorg.atlassian.net
