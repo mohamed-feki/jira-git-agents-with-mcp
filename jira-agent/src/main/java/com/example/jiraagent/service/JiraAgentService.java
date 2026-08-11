@@ -7,9 +7,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class JiraAgentService {
 
+    private final ToolCallbackProvider tools;
     private final ChatClient chatClient;
 
     public JiraAgentService(ChatClient.Builder builder, ToolCallbackProvider tools) {
+        this.tools = tools;
 
         if (tools == null) {
             System.out.println("❌ ToolCallbackProvider is NULL");
@@ -28,7 +30,6 @@ public class JiraAgentService {
         }
 
         this.chatClient = builder
-                .defaultToolCallbacks(tools)
                 .defaultSystem("""
                         You are a helpful assistant with access to Jira.
                         When asked about a Jira ticket, use the available tools to fetch
@@ -43,6 +44,7 @@ public class JiraAgentService {
      */
     public String readTicket(String ticketKey) {
         return chatClient.prompt()
+                .tools(this.tools)
                 .user("Fetch the Jira ticket " + ticketKey + " and provide a structured summary including: "
                         + "title, status, priority, assignee, reporter, description, and any comments.")
                 .call()
@@ -55,6 +57,7 @@ public class JiraAgentService {
     public String query(String userMessage) {
         return chatClient.prompt()
                 .user(userMessage)
+                .tools(this.tools)
                 .call()
                 .content();
     }
