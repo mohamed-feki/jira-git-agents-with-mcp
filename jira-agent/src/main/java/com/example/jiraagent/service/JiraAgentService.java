@@ -11,6 +11,7 @@ public class JiraAgentService {
     private final ChatClient chatClient;
 
     public JiraAgentService(ChatClient.Builder builder, ToolCallbackProvider tools) {
+        System.out.println("JiraAgentService");
         this.tools = tools;
 
         if (tools == null) {
@@ -44,7 +45,7 @@ public class JiraAgentService {
      */
     public String readTicket(String ticketKey) {
         return chatClient.prompt()
-                .tools(this.tools)
+                .toolCallbacks(this.tools)
                 .user("Fetch the Jira ticket " + ticketKey + " and provide a structured summary including: "
                         + "title, status, priority, assignee, reporter, description, and any comments.")
                 .call()
@@ -57,7 +58,7 @@ public class JiraAgentService {
     public String query(String userMessage) {
         return chatClient.prompt()
                 .user(userMessage)
-                .tools(this.tools)
+                .toolCallbacks(this.tools)
                 .call()
                 .content();
     }
